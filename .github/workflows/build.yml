@@ -18,8 +18,17 @@ jobs:
       - name: Extract project ZIP
         run: |
           unzip -oq VSubbaiyaTiffinsAndroid-1.zip
-          cd VSubbaiyaTiffinsAndroid
-          echo "PROJECT_DIR=$PWD" >> $GITHUB_ENV
+
+PROJECT_DIR=$(find . -type f -name "gradlew" -print -quit | xargs dirname)
+
+if [ -z "$PROJECT_DIR" ]; then
+  echo "Android project not found"
+  find . -maxdepth 3 -type f | head -100
+  exit 1
+fi
+
+echo "PROJECT_DIR=$PROJECT_DIR" >> $GITHUB_ENV
+chmod +x "$PROJECT_DIR/gradlew"
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -34,7 +43,7 @@ jobs:
 
       - name: Build APK
         working-directory: ${{ env.PROJECT_DIR }}
-        run: gradle --no-daemon assembleDebug
+run: ./gradlew --no-daemon assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4

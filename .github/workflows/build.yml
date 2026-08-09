@@ -18,6 +18,7 @@ jobs:
       - name: Extract project ZIP
         run: |
           unzip -q VSubbaiyaTiffinsAndroid-1.zip
+          -x ".github/workflows/*"
           cd VSubbaiyaTiffinsAndroid
           echo "PROJECT_DIR=$PWD" >> $GITHUB_ENV
 
